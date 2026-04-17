@@ -1,0 +1,74 @@
+[
+{
+  "model": "accounts.userprofile",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "first_name": "Test",
+    "middle_name": null,
+    "last_name": "User",
+    "date_of_birth": "2000-01-01",
+    "state": null,
+    "district": null,
+    "constituency": null,
+    "mandal": null,
+    "local_body": null,
+    "is_paid_user": false,
+    "created_at": "2026-03-15T05:22:12.048Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 2,
+  "fields": {
+    "user": 3,
+    "first_name": "Surya",
+    "middle_name": "Valivete",
+    "last_name": "Brahma",
+    "date_of_birth": "1983-03-11",
+    "state": 1,
+    "district": 1,
+    "constituency": 2,
+    "mandal": 2,
+    "local_body": 96,
+    "is_paid_user": true,
+    "created_at": "2026-03-15T09:35:53.129Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 3,
+  "fields": {
+    "user": 4,
+    "first_name": "testuser2",
+    "middle_name": "user2",
+    "last_name": "testinguser2",
+    "date_of_birth": "2001-03-15",
+    "state": 1,
+    "district": 1,
+    "constituency": 2,
+    "mandal": 2,
+    "local_body": 96,
+    "is_paid_user": true,
+    "created_at": "2026-03-15T09:57:02.692Z"
+  }
+},
+{
+  "model": "accounts.userprofile",
+  "pk": 4,
+  "fields": {
+    "user": 5,
+    "first_name": "testuser3",
+    "middle_name": "pay test",
+    "last_name": "testuser3",
+    "date_of_birth": "1997-04-30",
+    "state": 1,
+    "district": 1,
+    "constituency": 2,
+    "mandal": 2,
+    "local_body": 96,
+    "is_paid_user": true,
+    "created_at": "2026-03-15T16:06:12.507Z"
+  }
+}
+]

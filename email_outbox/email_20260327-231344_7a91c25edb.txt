@@ -1,0 +1,17 @@
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Subject: Test
+From: a@b.com
+To: test@example.com
+Date: Fri, 27 Mar 2026 17:43:44 +0000
+Message-ID: <177463342467.28316.4339372523900288731@DESKTOP-M6R5A3F>
+
+Reset: http://example.com/reset/abc/def/
+
+-------------------------------------------------------------------------------
+
+================================================================
+  COPY THIS ENTIRE LINE (password reset link - one line only)
+================================================================
+http://example.com/reset/abc/def/

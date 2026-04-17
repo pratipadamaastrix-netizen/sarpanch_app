@@ -1,0 +1,72 @@
+{% extends "public/base.html" %}
+{% block title %}Contact us — Sarpanch Directory{% endblock %}
+{% block extra_css %}
+.page-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px 26px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+    max-width: 640px;
+}
+.page-card h1 {
+    margin-top: 0;
+    color: var(--primary);
+    font-size: 1.65rem;
+}
+.contact-row {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+.contact-row .k {
+    font-weight: 700;
+    color: var(--primary);
+    min-width: 100px;
+}
+.contact-row .v {
+    color: #3a3f47;
+}
+.contact-row a { word-break: break-all; }
+.note {
+    margin-top: 24px;
+    padding: 14px 16px;
+    background: #f0f4fc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #3a4a6b;
+    border-left: 4px solid var(--primary);
+}
+{% endblock %}
+{% block content %}
+<div class="wrap">
+    <article class="page-card">
+        <h1>Contact us</h1>
+        <p>For enquiries about the directory, partnerships, or technical support, please reach out using the details below.</p>
+
+        <div class="contact-row">
+            <span class="k">Email</span>
+            <span class="v"><a href="mailto:support@example.com">support@example.com</a></span>
+        </div>
+        <div class="contact-row">
+            <span class="k">Phone</span>
+            <span class="v">+91 — — — — — — — — — —</span>
+        </div>
+        <div class="contact-row">
+            <span class="k">Office hours</span>
+            <span class="v">Monday to Friday, 10:00 – 18:00 IST</span>
+        </div>
+        <div class="contact-row">
+            <span class="k">Address</span>
+            <span class="v">Update this block in the template with your organisation’s postal address.</span>
+        </div>
+
+        <div class="note">
+            Replace the placeholder email, phone, and address in
+            <code>public/templates/public/contact.html</code>
+            with your production contact details, or extend this page later with a contact form backed by the server.
+        </div>
+    </article>
+</div>
+{% endblock %}

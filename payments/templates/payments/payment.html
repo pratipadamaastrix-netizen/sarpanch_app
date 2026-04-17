@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Payment</title>
+</head>
+<body style="font-family: Arial; background:#f4f6f9; margin:0; padding:16px; box-sizing:border-box;">
+
+<div style="box-sizing:border-box;width:100%;max-width:600px;margin:60px auto;background:white;padding:30px;border-radius:10px;">
+
+    <h2>Registration Fee Payment</h2>
+
+    <p>
+        To access the directory, please complete the one-time registration fee.
+    </p>
+
+    <h3>Amount: ₹20</h3>
+
+    <br>
+
+    <!-- Razorpay Button (Same Style) -->
+    <a href="#"
+       id="pay-btn"
+       style="padding:12px 20px;background:green;color:white;border-radius:6px;text-decoration:none;">
+       Pay Now
+    </a>
+
+    <!-- Optional Manual Fail Button -->
+    <a href="{% url 'payment_failed' %}"
+       style="padding:12px 20px;background:red;color:white;border-radius:6px;text-decoration:none;margin-left:10px;">
+       Cancel / Fail
+    </a>
+
+</div>
+
+<!-- Razorpay Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+var options = {
+    "key": "{{ razorpay_key }}",
+    "amount": "{{ amount }}",
+    "currency": "INR",
+    "name": "Directory App",
+    "description": "Registration Fee",
+    "order_id": "{{ order_id }}",
+
+    "handler": function (response){
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'payment_success' %}";
+
+        var fields = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+
+        for (var key in fields) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = fields[key];
+            form.appendChild(input);
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    },
+
+    "theme": {
+        "color": "#1f3c88"
+    }
+};
+
+var rzp = new Razorpay(options);
+
+document.getElementById('pay-btn').onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+
+</body>
+</html>

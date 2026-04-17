@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Sarpanch Directory{% endblock %}</title>
+    <style>
+        :root {
+            --primary: #1f3c88;
+            --primary-dark: #152a5c;
+            --bg: #f4f6f9;
+            --text: #222;
+            --muted: #5a6572;
+        }
+        * { box-sizing: border-box; }
+        html { overflow-x: hidden; }
+        body {
+            margin: 0;
+            font-family: "Segoe UI", system-ui, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a { color: var(--primary); }
+        .site-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #fff;
+            padding: 0 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .site-header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 14px 0;
+        }
+        .brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+        .brand:hover { color: #e8eefc; }
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 16px;
+        }
+        nav a {
+            color: rgba(255,255,255,0.92);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+        }
+        nav a:hover { text-decoration: underline; color: #fff; }
+        .nav-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .btn {
+            display: inline-block;
+            background: #fff;
+            color: var(--primary);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .btn:hover { background: #e8eefc; color: var(--primary-dark); }
+        .btn-ghost {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,0.12); color: #fff; }
+        main {
+            flex: 1;
+            width: 100%;
+        }
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .site-footer {
+            margin-top: auto;
+            background: #e8ecf2;
+            padding: 20px 24px;
+            font-size: 0.9rem;
+            color: var(--muted);
+            text-align: center;
+        }
+        .site-footer a { color: var(--primary); }
+        @media (max-width: 640px) {
+            .site-header-inner { flex-direction: column; align-items: flex-start; }
+            nav { width: 100%; }
+        }
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a class="brand" href="{% url 'home' %}">Sarpanch / Municipality Directory</a>
+            <nav>
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'about' %}">About us</a>
+                <a href="{% url 'contact' %}">Contact us</a>
+            </nav>
+            <div class="nav-actions">
+                <a class="btn btn-ghost" href="{% url 'login' %}">User login</a>
+                <a class="btn" href="{% url 'register' %}">Register</a>
+                <a class="btn btn-ghost" href="{% url 'sarpanch_login' %}">Sarpanch login</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <p>&copy; {% now "Y" %} Sarpanch Directory. <a href="{% url 'about' %}">About</a> · <a href="{% url 'contact' %}">Contact</a> · <a href="/admin/">Django admin</a></p>
+    </footer>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

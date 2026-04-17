@@ -1,0 +1,13 @@
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Subject: Your Sarpanch login OTP
+From: noreply@localhost
+To: brahmasurya.v@gmail.com
+Date: Thu, 16 Apr 2026 06:16:38 +0000
+Message-ID: <177632019826.30252.4427472949022833287@DESKTOP-M6R5A3F>
+
+Your OTP is 520824. It expires in 10 minutes.
+If you did not request this, ignore this email.
+
+-------------------------------------------------------------------------------

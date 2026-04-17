@@ -1,0 +1,40 @@
+[
+{
+  "model": "representatives.representative",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-03-15T04:34:04.044Z",
+    "updated_at": "2026-03-15T04:34:04.045Z",
+    "local_body": 47,
+    "representative_type": "SARPANCH",
+    "full_name": "Ramesh Yadav",
+    "age": 46,
+    "mobile_number": "Ramesh Yadav",
+    "photo": "representatives/lordganesha7.jpg.jpeg",
+    "gender": "MALE",
+    "status": "ACTIVE",
+    "effective_from": null,
+    "effective_to": null,
+    "notes": ""
+  }
+},
+{
+  "model": "representatives.representative",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-03-15T04:35:36.311Z",
+    "updated_at": "2026-03-15T06:15:22.733Z",
+    "local_body": 96,
+    "representative_type": "SARPANCH",
+    "full_name": "Kavitha Reddy",
+    "age": 52,
+    "mobile_number": "9123456780",
+    "photo": "representatives/lordganesha7_DOFCgDB.jpg.jpeg",
+    "gender": "FEMALE",
+    "status": "ACTIVE",
+    "effective_from": null,
+    "effective_to": null,
+    "notes": ""
+  }
+}
+]

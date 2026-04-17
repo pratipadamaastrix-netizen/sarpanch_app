@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Profile</title>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f4f6f9; margin:0; padding:0 16px 24px; box-sizing:border-box; }
+        .container { width:100%; max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.08); box-sizing:border-box; }
+        h2 { color:#1f3c88; margin-top:0; }
+        .row { margin-bottom:12px; }
+        .label { font-weight:bold; color:#1f3c88; }
+        .actions { margin-top:25px; display:flex; gap:12px; flex-wrap:wrap; }
+        .btn { background:#1f3c88; color:#fff; text-decoration:none; padding:10px 16px; border-radius:6px; }
+        .btn.secondary { background:#666; }
+        .status-paid { color:green; font-weight:bold; }
+        .status-unpaid { color:red; font-weight:bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>My Profile</h2>
+
+        <div class="row"><span class="label">Username:</span> {{ request.user.username }}</div>
+        <div class="row"><span class="label">Email:</span> {{ request.user.email|default:"Not Available" }}</div>
+        <div class="row"><span class="label">Mobile:</span> {% if profile.phone_number %}+91 {{ profile.phone_number }}{% else %}-{% endif %}</div>
+        <div class="row"><span class="label">First Name:</span> {{ profile.first_name }}</div>
+        <div class="row"><span class="label">Middle Name:</span> {{ profile.middle_name|default:"-" }}</div>
+        <div class="row"><span class="label">Last Name:</span> {{ profile.last_name }}</div>
+        <div class="row"><span class="label">Date of Birth:</span> {{ profile.date_of_birth }}</div>
+        <div class="row"><span class="label">State:</span> {{ profile.state|default:"-" }}</div>
+        <div class="row"><span class="label">District:</span> {{ profile.district|default:"-" }}</div>
+        <div class="row"><span class="label">Constituency:</span> {{ profile.constituency|default:"-" }}</div>
+        <div class="row"><span class="label">Mandal:</span> {{ profile.mandal|default:"-" }}</div>
+        <div class="row"><span class="label">Village / Municipality:</span> {{ profile.local_body|default:"-" }}</div>
+        <div class="row">
+            <span class="label">Payment Status:</span>
+            {% if profile.is_paid_user %}
+                <span class="status-paid">Paid</span>
+            {% else %}
+                <span class="status-unpaid">Unpaid</span>
+            {% endif %}
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'edit_profile' %}" class="btn">Edit Profile</a>
+            <a href="{% url 'change_password' %}" class="btn">Change Password</a>
+            <a href="{% url 'dashboard' %}" class="btn secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% extends "public/base.html" %}
+{% block title %}About us — Sarpanch Directory{% endblock %}
+{% block extra_css %}
+.page-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px 26px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+    max-width: 800px;
+}
+.page-card h1 {
+    margin-top: 0;
+    color: var(--primary);
+    font-size: 1.65rem;
+}
+.page-card h2 {
+    color: var(--primary);
+    font-size: 1.15rem;
+    margin-top: 1.5rem;
+}
+.page-card p, .page-card li {
+    line-height: 1.65;
+    color: #3a3f47;
+}
+.page-card ul { padding-left: 1.2rem; }
+{% endblock %}
+{% block content %}
+<div class="wrap">
+    <article class="page-card">
+        <h1>About us</h1>
+        <p>
+            The <strong>Sarpanch / Municipality Directory</strong> is a web portal that brings together
+            location-wise information about elected representatives—Sarpanchs and chairpersons—linked to
+            villages and municipalities across the hierarchy of districts, constituencies, and mandals.
+        </p>
+        <h2>What you can do</h2>
+        <ul>
+            <li><strong>Public visitors</strong> can browse high-level directory statistics and featured updates on the home page.</li>
+            <li><strong>Registered users</strong> can log in to search representatives by location and access extended features subject to subscription.</li>
+            <li><strong>Sarpanchs</strong> can use the dedicated OTP-based login to access and maintain their profile where enabled.</li>
+        </ul>
+        <h2>Our goal</h2>
+        <p>
+            To make representative information easier to discover and to support transparent access to
+            local governance contacts for citizens, administrators, and partner organisations.
+        </p>
+        <p style="margin-top:1.5rem;font-size:0.95rem;color:var(--muted);">
+            Content and counts on this site are maintained through the administrative console and update automatically as data changes.
+        </p>
+    </article>
+</div>
+{% endblock %}

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0 16px 24px;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        h2 {
+            margin-top: 0;
+            color: #1f3c88;
+        }
+        .row {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .errorlist {
+            color: red;
+            margin: 6px 0;
+            padding-left: 18px;
+        }
+        .messages p {
+            padding: 10px;
+            border-radius: 6px;
+            background: #fce8e6;
+            color: #b3261e;
+        }
+        .btn {
+            background: #1f3c88;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .link {
+            margin-top: 18px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>User Registration</h2>
+
+    <div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row">
+            <label for="{{ form.first_name.id_for_label }}">First Name</label>
+            {{ form.first_name }}
+            {{ form.first_name.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.middle_name.id_for_label }}">Middle Name</label>
+            {{ form.middle_name }}
+            {{ form.middle_name.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+            {{ form.last_name }}
+            {{ form.last_name.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth</label>
+            {{ form.date_of_birth }}
+            {{ form.date_of_birth.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            {{ form.username.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+            {{ form.email.errors }}
+            <p class="muted" style="font-size:13px;color:#555;margin:6px 0 0;">Each email may be used only once.</p>
+        </div>
+
+        <div class="row">
+            <label for="{{ form.phone_number.id_for_label }}">Mobile number (India)</label>
+            <div style="display:flex;align-items:center;gap:10px;max-width:100%;">
+                <span style="font-weight:bold;color:#1f3c88;">+91</span>
+                <div style="flex:1;min-width:0;">{{ form.phone_number }}</div>
+            </div>
+            {{ form.phone_number.errors }}
+            <p class="muted" style="font-size:13px;color:#555;margin:6px 0 0;">10 digits only; same number cannot be used on two accounts.</p>
+        </div>
+
+        <div class="row">
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+            {{ form.password.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.confirm_password.id_for_label }}">Confirm Password</label>
+            {{ form.confirm_password }}
+            {{ form.confirm_password.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.state.id_for_label }}">State</label>
+            {{ form.state }}
+            {{ form.state.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.district.id_for_label }}">District</label>
+            {{ form.district }}
+            {{ form.district.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.constituency.id_for_label }}">Constituency</label>
+            {{ form.constituency }}
+            {{ form.constituency.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.mandal.id_for_label }}">Mandal</label>
+            {{ form.mandal }}
+            {{ form.mandal.errors }}
+        </div>
+
+        <div class="row">
+            <label for="{{ form.local_body.id_for_label }}">Village / Municipality</label>
+            {{ form.local_body }}
+            {{ form.local_body.errors }}
+        </div>
+
+        <button type="submit" class="btn">Register</button>
+    </form>
+
+    <div class="link">
+        Already have an account?
+        <a href="{% url 'login' %}">Login</a>
+    </div>
+</div>
+
+<script>
+    const stateField = document.getElementById("id_state");
+    const districtField = document.getElementById("id_district");
+    const constituencyField = document.getElementById("id_constituency");
+    const mandalField = document.getElementById("id_mandal");
+    const localBodyField = document.getElementById("id_local_body");
+
+    function resetDropdown(selectElement, placeholder) {
+        selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+    }
+
+    function populateDropdown(selectElement, items, placeholder) {
+        resetDropdown(selectElement, placeholder);
+        items.forEach(item => {
+            const option = document.createElement("option");
+            option.value = item.id;
+            option.textContent = item.name;
+            selectElement.appendChild(option);
+        });
+    }
+
+    stateField.addEventListener("change", function () {
+        const stateId = this.value;
+
+        resetDropdown(districtField, "Select District");
+        resetDropdown(constituencyField, "Select Constituency");
+        resetDropdown(mandalField, "Select Mandal");
+        resetDropdown(localBodyField, "Select Village / Municipality");
+
+        if (!stateId) return;
+
+        fetch(`/locations/ajax/districts/${stateId}/`)
+            .then(response => response.json())
+            .then(data => {
+                populateDropdown(districtField, data.results, "Select District");
+            })
+            .catch(error => console.error("Error loading districts:", error));
+    });
+
+    districtField.addEventListener("change", function () {
+        const districtId = this.value;
+
+        resetDropdown(constituencyField, "Select Constituency");
+        resetDropdown(mandalField, "Select Mandal");
+        resetDropdown(localBodyField, "Select Village / Municipality");
+
+        if (!districtId) return;
+
+        fetch(`/locations/ajax/constituencies/${districtId}/`)
+            .then(response => response.json())
+            .then(data => {
+                populateDropdown(constituencyField, data.results, "Select Constituency");
+            })
+            .catch(error => console.error("Error loading constituencies:", error));
+    });
+
+    constituencyField.addEventListener("change", function () {
+        const constituencyId = this.value;
+
+        resetDropdown(mandalField, "Select Mandal");
+        resetDropdown(localBodyField, "Select Village / Municipality");
+
+        if (!constituencyId) return;
+
+        fetch(`/locations/ajax/mandals/${constituencyId}/`)
+            .then(response => response.json())
+            .then(data => {
+                populateDropdown(mandalField, data.results, "Select Mandal");
+            })
+            .catch(error => console.error("Error loading mandals:", error));
+    });
+
+    mandalField.addEventListener("change", function () {
+        const mandalId = this.value;
+
+        resetDropdown(localBodyField, "Select Village / Municipality");
+
+        if (!mandalId) return;
+
+        fetch(`/locations/ajax/local-bodies/${mandalId}/`)
+            .then(response => response.json())
+            .then(data => {
+                populateDropdown(localBodyField, data.results, "Select Village / Municipality");
+            })
+            .catch(error => console.error("Error loading local bodies:", error));
+    });
+</script>
+</body>
+</html>

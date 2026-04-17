@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0 16px 24px;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #222;
+        }
+
+        .header {
+            background: #1f3c88;
+            color: white;
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .logout-btn {
+            text-decoration: none;
+            background: white;
+            color: #1f3c88;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #1f3c88;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .field-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .field-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cfd6e4;
+            border-radius: 8px;
+            background: white;
+            box-sizing: border-box;
+        }
+
+        .rep-card {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .rep-photo {
+            width: 100%;
+            max-width: 220px;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            background: #fafafa;
+        }
+
+        .rep-details p {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #1f3c88;
+        }
+
+        .empty-box {
+            padding: 20px;
+            border-radius: 8px;
+            background: #fff8e1;
+            color: #8a6d3b;
+        }
+
+        /* Ads strip: must allow horizontal scroll for auto-scroll (was overflow:hidden — no scroll) */
+        #ads-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            border-radius: 8px;
+            border: 1px solid #e0e4ec;
+            background: #fafbfc;
+        }
+        #ads-container::-webkit-scrollbar {
+            display: none;
+        }
+        #ads-strip {
+            display: flex;
+            gap: 20px;
+            padding: 12px;
+        }
+        #ads-strip .ads-item {
+            flex: 0 0 auto;
+            min-width: 280px;
+            max-width: 360px;
+        }
+        #ads-strip .ads-item img {
+            width: 100%;
+            border-radius: 8px;
+            vertical-align: top;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .rep-card {
+                grid-template-columns: 1fr;
+            }
+
+            .rep-photo {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Sarpanch / Municipality Directory</h2>
+        <div class="header-right">
+            <span>Welcome, {{ request.user.username }}</span>
+            <a href="{% url 'profile' %}" class="logout-btn">Profile</a>
+            <a href="{% url 'edit_profile' %}" class="logout-btn">Edit Profile</a>
+            <a href="{% url 'change_password' %}" class="logout-btn">Change Password</a>
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h3>Search Representative</h3>
+
+            <form method="get" id="dashboardForm">
+                <div class="filter-grid">
+                    <div class="field-group">
+                        <label for="district">District</label>
+                        <select name="district" id="district">
+                            <option value="">Select District</option>
+                            {% for district in districts %}
+                                <option value="{{ district.id }}" {% if selected_district == district.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ district.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="constituency">Constituency</label>
+                        <select name="constituency" id="constituency">
+                            <option value="">Select Constituency</option>
+                            {% for constituency in constituencies %}
+                                <option value="{{ constituency.id }}" {% if selected_constituency == constituency.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ constituency.display_name|default:constituency.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="mandal">Mandal</label>
+                        <select name="mandal" id="mandal">
+                            <option value="">Select Mandal</option>
+                            {% for mandal in mandals %}
+                                <option value="{{ mandal.id }}" {% if selected_mandal == mandal.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ mandal.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="local_body">Village / Municipality</label>
+                        <select name="local_body" id="local_body">
+                            <option value="">Select Village / Municipality</option>
+                            {% for body in local_bodies %}
+                                <option value="{{ body.id }}" {% if selected_local_body == body.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ body.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Advertisements</h3>
+        
+            <div id="ads-container">
+                <div id="ads-strip"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Representative Details</h3>
+
+            {% if representative %}
+                <div class="rep-card">
+                    <div>
+                        {% if representative.photo %}
+                            <img src="{{ representative.photo.url }}" alt="{{ representative.full_name }}" class="rep-photo">
+                        {% else %}
+                            <div class="rep-photo" style="display:flex;align-items:center;justify-content:center;">
+                                No Photo
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="rep-details">
+                        <p><span class="label">Name:</span> {{ representative.full_name }}</p>
+                        <p><span class="label">Type:</span> {{ representative.get_rep_type_display }}</p>
+                        <p><span class="label">Mobile:</span> {{ representative.mobile_number|default:"Not Available" }}</p>
+                        <p><span class="label">Alternate Number:</span> {{ representative.alternate_number|default:"Not Available" }}</p>
+                        <p><span class="label">Address:</span> {{ representative.address|default:"Not Available" }}</p>
+                        <p><span class="label">Notes:</span> {{ representative.notes|default:"Not Available" }}</p>
+                        <p><span class="label">Local Body:</span> {{ representative.local_body.name }}</p>
+                        <p><span class="label">Mandal:</span> {{ representative.local_body.mandal.name }}</p>
+                        <p><span class="label">Constituency:</span> {{ representative.local_body.constituency.display_name|default:representative.local_body.constituency.name }}</p>
+                        <p><span class="label">District:</span> {{ representative.local_body.district.name }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty-box">
+                    Select location details to view representative information.
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script>
+        const districtField = document.getElementById("district");
+        const constituencyField = document.getElementById("constituency");
+        const mandalField = document.getElementById("mandal");
+        const localBodyField = document.getElementById("local_body");
+        const form = document.getElementById("dashboardForm");
+
+        function resetDropdown(selectElement, placeholder) {
+            selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+        }
+
+        function populateDropdown(selectElement, items, placeholder, labelKey = "name") {
+            resetDropdown(selectElement, placeholder);
+            items.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.id;
+                option.textContent = item[labelKey] || item.name;
+                selectElement.appendChild(option);
+            });
+        }
+
+        districtField.addEventListener("change", function () {
+            const districtId = this.value;
+
+            resetDropdown(constituencyField, "Select Constituency");
+            resetDropdown(mandalField, "Select Mandal");
+            resetDropdown(localBodyField, "Select Village / Municipality");
+
+            if (!districtId) {
+                form.submit();
+                return;
+            }
+
+            fetch(`/locations/ajax/constituencies/${districtId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    populateDropdown(constituencyField, data.results, "Select Constituency", "display_name");
+                })
+                .catch(error => console.error("Error loading constituencies:", error));
+        });
+
+        constituencyField.addEventListener("change", function () {
+            const constituencyId = this.value;
+
+            resetDropdown(mandalField, "Select Mandal");
+            resetDropdown(localBodyField, "Select Village / Municipality");
+
+            if (!constituencyId) return;
+
+            fetch(`/locations/ajax/mandals/${constituencyId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    populateDropdown(mandalField, data.results, "Select Mandal", "name");
+                })
+                .catch(error => console.error("Error loading mandals:", error));
+        });
+
+        mandalField.addEventListener("change", function () {
+            const mandalId = this.value;
+
+            resetDropdown(localBodyField, "Select Village / Municipality");
+
+            if (!mandalId) return;
+
+            fetch(`/locations/ajax/local-bodies/${mandalId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    resetDropdown(localBodyField, "Select Village / Municipality");
+                    data.results.forEach(item => {
+                        const option = document.createElement("option");
+                        option.value = item.id;
+                        option.textContent = `${item.name} (${item.local_body_type})`;
+                        localBodyField.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error loading local bodies:", error));
+        });
+
+        localBodyField.addEventListener("change", function () {
+            form.submit();
+        });
+        /* ⭐ ADS MODULE — horizontal scroll + seamless loop (like home banner) ⭐ */
+
+        let adsScrollRaf = null;
+        let adsHalfWidth = 0;
+        let adsLastTs = 0;
+        let adsAnimRunId = 0;
+        const adsPxPerSec = 72;
+
+        function measureAdsStrip() {
+            const strip = document.getElementById("ads-strip");
+            const container = document.getElementById("ads-container");
+            if (!strip || !container || strip.children.length === 0) {
+                adsHalfWidth = 0;
+                return;
+            }
+            adsHalfWidth = strip.scrollWidth / 2;
+        }
+
+        function stopAdsScroller() {
+            adsAnimRunId++;
+            if (adsScrollRaf) {
+                cancelAnimationFrame(adsScrollRaf);
+                adsScrollRaf = null;
+            }
+        }
+
+        function adsScrollFrame(now, runId) {
+            if (runId !== adsAnimRunId) return;
+            const container = document.getElementById("ads-container");
+            if (!container) return;
+            const dt = (now - adsLastTs) / 1000;
+            adsLastTs = now;
+
+            if (
+                adsHalfWidth > 1 &&
+                container.scrollWidth > container.clientWidth + 4
+            ) {
+                container.scrollLeft += adsPxPerSec * dt;
+                if (container.scrollLeft >= adsHalfWidth - 0.5) {
+                    container.scrollLeft -= adsHalfWidth;
+                }
+            }
+            adsScrollRaf = requestAnimationFrame(function (t) {
+                adsScrollFrame(t, runId);
+            });
+        }
+
+        function startAdsScroller() {
+            const runId = adsAnimRunId;
+            adsLastTs = performance.now();
+            adsScrollRaf = requestAnimationFrame(function (t) {
+                adsScrollFrame(t, runId);
+            });
+        }
+
+        function loadAds() {
+            stopAdsScroller();
+            const district = districtField.value || "{{ default_district }}";
+            const constituency = constituencyField.value;
+            const mandal = mandalField.value;
+
+            fetch(`/advertisements/ajax/get-ads/?district=${district}&constituency=${constituency}&mandal=${mandal}`)
+                .then(response => response.json())
+                .then(data => {
+                    const strip = document.getElementById("ads-strip");
+                    strip.innerHTML = "";
+
+                    data.ads.forEach(ad => {
+                        const adDiv = document.createElement("div");
+                        adDiv.className = "ads-item";
+                        adDiv.innerHTML = `
+                            <a href="${ad.link}" target="_blank" rel="noopener noreferrer">
+                                <img src="${ad.image}" alt="">
+                            </a>
+                        `;
+                        strip.appendChild(adDiv);
+                    });
+
+                    if (strip.children.length === 0) {
+                        adsHalfWidth = 0;
+                        return;
+                    }
+                    strip.innerHTML = strip.innerHTML + strip.innerHTML;
+                    measureAdsStrip();
+                    strip.querySelectorAll("img").forEach(function (img) {
+                        if (!img.complete) {
+                            img.addEventListener("load", measureAdsStrip);
+                        }
+                    });
+                    startAdsScroller();
+                });
+        }
+
+        window.addEventListener("load", loadAds);
+        window.addEventListener("resize", measureAdsStrip);
+
+        districtField.addEventListener("change", loadAds);
+        constituencyField.addEventListener("change", loadAds);
+        mandalField.addEventListener("change", loadAds);
+
+/* ⭐ ADS MODULE END ⭐ */
+    </script>
+
+</body>
+</html>

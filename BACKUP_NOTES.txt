@@ -1,0 +1,47 @@
+Sarpanch app — database backup / restore (MySQL)
+================================================
+
+What gets backed up
+-------------------
+All Django data lives in the MySQL database named in core/settings.py (e.g. sarpanch_directory).
+Data you add in Django Admin is stored there. A full mysqldump is a complete backup of that database.
+
+Full backup (SQL dump) — recommended
+--------------------------------------
+Adjust the path to mysqldump if your MySQL version/install folder differs.
+
+  mysqldump -u root -p -h 127.0.0.1 -P 3306 sarpanch_directory ^
+    --single-transaction --routines --triggers ^
+    --result-file="D:\e data\Cursor\Sarpanch app\sarpanch_app\db_backup_sarpanch_directory_MANUAL.sql"
+
+(-p will prompt for password; avoids putting the password in the command history.)
+
+PowerShell (example with explicit mysqldump path):
+
+  & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe" `
+    -u root -p -h 127.0.0.1 -P 3306 sarpanch_directory `
+    --single-transaction --routines --triggers `
+    --result-file="D:\e data\Cursor\Sarpanch app\sarpanch_app\db_backup_sarpanch_directory_MANUAL.sql"
+
+Restore from a .sql dump (overwrites target DB — use a fresh DB or backup first)
+---------------------------------------------------------------------------------
+  mysql -u root -p -h 127.0.0.1 -P 3306 sarpanch_directory < path\to\backup.sql
+
+Or in PowerShell:
+
+  Get-Content path\to\backup.sql -Raw | & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p -h 127.0.0.1 -P 3306 sarpanch_directory
+
+Optional: Django JSON fixture (portable, not a full MySQL backup)
+-----------------------------------------------------------------
+From the folder that contains manage.py:
+
+  python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 2 -o backup_fixture.json
+
+Restore fixtures (selective; may need flush or careful order):
+
+  python manage.py loaddata backup_fixture.json
+
+Last automated backup filename pattern
+--------------------------------------
+  db_backup_sarpanch_directory_YYYYMMDD_HHMMSS.sql
+  (saved under this project folder: sarpanch_app)

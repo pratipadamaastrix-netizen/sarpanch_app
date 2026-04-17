@@ -1,0 +1,284 @@
+{% extends "public/base.html" %}
+{% block title %}Home — Sarpanch Directory{% endblock %}
+{% block extra_css %}
+/* Full-bleed band so side margins fill with tone (less empty white) */
+.highlights-fullbleed {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    background: linear-gradient(180deg, #e4e9f0 0%, #eef1f6 45%, #f4f6f9 100%);
+    padding: 22px 0 34px;
+    margin-bottom: 28px;
+    box-sizing: border-box;
+    border-top: 1px solid #d8dde6;
+    border-bottom: 1px solid #d8dde6;
+}
+.highlights-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 18px;
+}
+.highlights-title {
+    margin: 0 0 14px;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+.hero-strip-wrap {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #c8d0de;
+    box-shadow:
+        0 4px 6px rgba(31, 60, 136, 0.06),
+        0 12px 28px rgba(31, 60, 136, 0.1);
+    overflow: hidden;
+}
+#banner-container {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+    /* hide scrollbar but keep scroll */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+#banner-container::-webkit-scrollbar {
+    display: none;
+}
+#banner-strip {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+/* Exactly one slide visible: each slide = full width of scroll viewport */
+.banner-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+/*
+  Your two sample posters: 1024×387 (≈2.65:1) and 1024×571 (≈1.79:1).
+  Frame uses the taller height (571) so nothing is cropped; the flatter image
+  gets letterboxing. For a perfect edge-to-edge fit, upload at 1024×571 (or same ratio).
+*/
+.slide-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1024 / 571;
+    background: #e8ebf1;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.slide-frame a {
+    position: absolute;
+    inset: 0;
+    display: block;
+    text-decoration: none;
+}
+.slide-frame img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+}
+.stats-section h2 {
+    margin: 0 0 16px;
+    font-size: 1.35rem;
+    color: var(--primary);
+}
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+}
+.stat-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border-left: 4px solid var(--primary);
+}
+.stat-card .label {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+.stat-card .value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+.intro {
+    margin-bottom: 24px;
+}
+.intro h1 {
+    margin: 0 0 10px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--primary);
+}
+.intro p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: #444;
+    max-width: 720px;
+}
+.empty-banner {
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--muted);
+    background: #fafbfc;
+    border-radius: 12px;
+    border: 1px dashed #c8d0de;
+}
+{% endblock %}
+{% block content %}
+<div class="wrap">
+    <section class="intro">
+        <h1>Welcome to the directory</h1>
+        <p>
+            Explore elected representatives across districts, constituencies, mandals, and villages.
+            Registered users can search detailed profiles after login; Sarpanchs can sign in with OTP.
+        </p>
+    </section>
+</div>
+
+<section class="highlights-fullbleed" aria-label="Highlights">
+    <div class="highlights-inner">
+        <h2 class="highlights-title">Highlights</h2>
+        {% if banner_slides %}
+        <div class="hero-strip-wrap">
+            <div id="banner-container">
+                <div id="banner-strip">
+                    {% for slide in banner_slides %}
+                    <div class="banner-slide">
+                        <div class="slide-frame">
+                            {% if slide.link %}
+                            <a href="{{ slide.link }}" target="_blank" rel="noopener noreferrer">
+                                <img src="{{ slide.image }}" alt="">
+                            </a>
+                            {% else %}
+                            <img src="{{ slide.image }}" alt="">
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-banner">No banner images yet. Add a <strong>Home page hero poster</strong> or <strong>Advertisements</strong> in the admin.</div>
+        {% endif %}
+    </div>
+</section>
+
+<div class="wrap">
+    <section class="stats-section">
+        <h2>Directory at a glance</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">No. of Districts</div>
+                <div class="value">{{ stats.districts }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">No. of Constituencies</div>
+                <div class="value">{{ stats.constituencies }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">No. of Mandals</div>
+                <div class="value">{{ stats.mandals }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">No. of Villages</div>
+                <div class="value">{{ stats.villages }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">No. of Representatives</div>
+                <div class="value">{{ stats.representatives }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">No. of Users</div>
+                <div class="value">{{ stats.users }}</div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+{% block extra_js %}
+{% if banner_slides %}
+<script>
+(function () {
+    var container = document.getElementById("banner-container");
+    var strip = document.getElementById("banner-strip");
+    if (!container || !strip) return;
+
+    strip.innerHTML = strip.innerHTML + strip.innerHTML;
+
+    var halfWidth = 0;
+
+    function measure() {
+        var w = strip.scrollWidth;
+        halfWidth = w > 0 ? w / 2 : 0;
+    }
+
+    function sizeSlides() {
+        var w = container.clientWidth;
+        if (w < 1) return;
+        strip.querySelectorAll(".banner-slide").forEach(function (el) {
+            el.style.flex = "0 0 " + w + "px";
+            el.style.width = w + "px";
+            el.style.minWidth = w + "px";
+            el.style.maxWidth = w + "px";
+        });
+        measure();
+    }
+
+    requestAnimationFrame(function () {
+        requestAnimationFrame(sizeSlides);
+    });
+    window.addEventListener("resize", sizeSlides);
+    window.addEventListener("load", function () {
+        sizeSlides();
+    });
+    strip.querySelectorAll("img").forEach(function (img) {
+        if (img.complete) return;
+        img.addEventListener("load", function () {
+            sizeSlides();
+        });
+    });
+
+    var last = performance.now();
+    var pxPerSec = 105;
+
+    function frame(now) {
+        var dt = (now - last) / 1000;
+        last = now;
+
+        if (
+            halfWidth > 1 &&
+            container.scrollWidth > container.clientWidth + 4
+        ) {
+            container.scrollLeft += pxPerSec * dt;
+            if (container.scrollLeft >= halfWidth - 0.5) {
+                container.scrollLeft -= halfWidth;
+            }
+        }
+
+        requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+})();
+</script>
+{% endif %}
+{% endblock %}
