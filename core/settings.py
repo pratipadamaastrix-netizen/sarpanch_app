@@ -129,14 +129,11 @@ SMS_LOG_TO_FILE = os.environ.get("SMS_LOG_TO_FILE", "1").lower() in ("1", "true"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get("DB_NAME"),
-        'USER': os.environ.get("DB_USER"),
-        'PASSWORD': os.environ.get("DB_PASSWORD"),
-        'HOST': os.environ.get("DB_HOST"),
-        'PORT': os.environ.get("DB_PORT", "3306"),
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
+        'NAME': 'railway',
+        'USER': 'root',
+        'PASSWORD': 'boEZDZVJrddxHDJdNBSdFYAZYRadbMAP',
+        'HOST': 'nozomi.proxy.rlwy.net',
+        'PORT': '12699',
     }
 }
 
