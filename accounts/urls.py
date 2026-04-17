@@ -18,6 +18,7 @@ urlpatterns = [
         rep_views.sarpanch_resend_otp_view,
         name="sarpanch_resend_otp",
     ),
+    path("check-static/", views.check_static),
     path(
         "sarpanch/profile/",
         rep_views.sarpanch_update_profile_view,

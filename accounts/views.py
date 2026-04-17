@@ -32,6 +32,16 @@ from .password_reset_otp import (
 from locations.models import District, Constituency, Mandal, LocalBody
 from representatives.models import Representative
 
+# in any views.py
+from django.http import HttpResponse
+import os
+from django.conf import settings
+
+def check_static(request):
+    path = os.path.join(settings.BASE_DIR, 'staticfiles')
+    files = os.listdir(path) if os.path.exists(path) else "NOT FOUND"
+    return HttpResponse(str(files))
+
 PWD_RESET_USERNAME = "pwd_reset_username"
 PWD_RESET_UID = "pwd_reset_uid"
 PWD_RESET_OTP_OK = "pwd_reset_otp_ok"
