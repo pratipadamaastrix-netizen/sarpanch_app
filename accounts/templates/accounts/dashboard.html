@@ -431,12 +431,17 @@
             fetch(`/advertisements/ajax/get-ads/?district=${district}&constituency=${constituency}&mandal=${mandal}`)
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Loaded ads:", data);
                     const strip = document.getElementById("ads-strip");
                     strip.innerHTML = "";
-
+                    
                     data.ads.forEach(ad => {
+                        //console.log("Adding ad to strip:");
                         const adDiv = document.createElement("div");
                         adDiv.className = "ads-item";
+                        console.log(ad.image);
+                        //ad.image = ads/phone_dir_app_XKP3j6g.png
+                        //ad.image = https://dev.maastrixdemo.com/testimg/ads/phone_dir_app_XKP3j6g.png
                         adDiv.innerHTML = `
                             <a href="${ad.link}" target="_blank" rel="noopener noreferrer">
                                 <img src="${ad.image}" alt="">
