@@ -50,7 +50,7 @@ window.onload = function () {
 
         // ✅ SUCCESS REDIRECT
         "handler": function (response) {
-            window.location.href = "/payment-success/?payment_id=" + response.razorpay_payment_id;
+            window.location.href = "/payments/payment-success/?payment_id=" + response.razorpay_payment_id;
         },
 
         "prefill": {

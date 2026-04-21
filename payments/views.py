@@ -13,14 +13,20 @@ def payment_success(request):
 # CREATE ORDER
 @login_required
 def payment_page(request):
-    profile = ensure_user_profile(request.user)
+    # 🔥 Safe check (prevents 500 error)
+    try:
+        already_paid = Payment.objects.filter(user=request.user, is_paid=True).exists()
+    except Exception as e:
+        print("ERROR:", e)
+        already_paid = False
 
-    if profile.is_paid_user:
+    if already_paid:
         return redirect("dashboard")
 
+    # Continue normal flow
     client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
-    amount = 100# ₹1 in paise
+    amount = 100  # ₹1 in paise
 
     order = client.order.create({
         "amount": amount,
@@ -28,11 +34,11 @@ def payment_page(request):
         "payment_capture": "1"
     })
 
-    # Save in DB
-    payment = Payment.objects.create(
+    Payment.objects.create(
         user=request.user,
         amount=amount,
-        razorpay_order_id=order["id"]
+        razorpay_order_id=order["id"],
+        status="created"
     )
 
     context = {
