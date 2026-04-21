@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Payment
 from accounts.utils import ensure_user_profile
 
+def payment_success(request):
+    payment_id = request.GET.get("payment_id")
+    return render(request, "payments/success.html", {"payment_id": payment_id})
 
 # CREATE ORDER
 @login_required
@@ -17,7 +20,7 @@ def payment_page(request):
 
     client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
-    amount = 2000  # ₹20 in paise
+    amount = 100# ₹1 in paise
 
     order = client.order.create({
         "amount": amount,
