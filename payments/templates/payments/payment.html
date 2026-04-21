@@ -41,26 +41,22 @@
 window.onload = function () {
 
     var options = {
-        "key": "{{ razorpay_key }}",
-        "amount": "{{ amount }}",
-        "currency": "INR",
-        "name": "Directory App",
-        "description": "Test Payment",
-        "order_id": "{{ order_id }}",
+    "key": "{{ razorpay_key }}",
+    "amount": "{{ amount }}",
+    "currency": "INR",
+    "name": "Directory App",
+    "description": "Test Payment",
+    "order_id": "{{ order_id }}",
 
-        // ✅ SUCCESS REDIRECT
-        "handler": function (response) {
-            window.location.href = "/payments/payment-success/?payment_id=" + response.razorpay_payment_id;
-        },
+    // ✅ VERY IMPORTANT
+    "handler": function (response) {
+        window.location.href = "/payments/payment-success/?payment_id=" + response.razorpay_payment_id;
+    },
 
-        "prefill": {
-            "contact": "8114780031"
-        },
-
-        "theme": {
-            "color": "#3399cc"
-        }
-    };
+    "theme": {
+        "color": "#3399cc"
+    }
+};
 
     var rzp = new Razorpay(options);
 
