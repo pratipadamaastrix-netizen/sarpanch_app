@@ -7,33 +7,6 @@
 </head>
 <body style="font-family: Arial; background:#f4f6f9; margin:0; padding:16px; box-sizing:border-box;">
 
-<div style="box-sizing:border-box;width:100%;max-width:600px;margin:60px auto;background:white;padding:30px;border-radius:10px;text-align:center;">
-
-    <h2 style="color:green;">Payment Successful</h2>
-
-    <p>Thank you for your payment!</p>
-    <p>Your registration fee has been received successfully.</p>
-
-    <br>
-
-    {% if payment_id %}
-        <p><strong>Payment ID:</strong> {{ payment_id }}</p>
-    {% endif %}
-
-    <br><br>
-
-    <a href="{% url 'dashboard' %}"
-       style="padding:12px 20px;background:#1f3c88;color:white;border-radius:6px;text-decoration:none;">
-       Go to Dashboard
-    </a>
-
-</div>
-
-<script>
-    setTimeout(function() {
-        window.location.href = "{% url 'dashboard' %}";
-    }, 1000);  // 1 seconds
-</script>
 
 </body>
 </html>

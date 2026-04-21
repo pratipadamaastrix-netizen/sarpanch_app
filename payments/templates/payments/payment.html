@@ -48,7 +48,6 @@ window.onload = function () {
     "description": "Test Payment",
     "order_id": "{{ order_id }}",
 
-    // ✅ VERY IMPORTANT
     "handler": function (response) {
         window.location.href = "/payments/payment-success/?payment_id=" + response.razorpay_payment_id;
     },
