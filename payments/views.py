@@ -6,24 +6,16 @@ from django.contrib.auth.decorators import login_required
 from .models import Payment
 from accounts.utils import ensure_user_profile
 
-def payment_success(request):
-    payment_id = request.GET.get("payment_id")
-    return render(request, "payments/success.html", {"payment_id": payment_id})
 
-# CREATE ORDER
+# ✅ CREATE ORDER / SHOW PAYMENT PAGE
 @login_required
 def payment_page(request):
-    # 🔥 Safe check (prevents 500 error)
-    try:
-        already_paid = Payment.objects.filter(user=request.user, is_paid=True).exists()
-    except Exception as e:
-        print("ERROR:", e)
-        already_paid = False
+    profile = ensure_user_profile(request.user)
 
-    if already_paid:
+    # 🔥 Prevent repeat payment
+    if profile.is_paid_user or Payment.objects.filter(user=request.user, is_paid=True).exists():
         return redirect("dashboard")
 
-    # Continue normal flow
     client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
     amount = 100  # ₹1 in paise
@@ -34,57 +26,47 @@ def payment_page(request):
         "payment_capture": "1"
     })
 
+    # Save order in DB
     Payment.objects.create(
         user=request.user,
         amount=amount,
         razorpay_order_id=order["id"],
-        status="created"
+        status="created",
+        is_paid=False
     )
 
-    context = {
+    return render(request, "payments/payment.html", {
         "order_id": order["id"],
         "razorpay_key": settings.RAZORPAY_KEY_ID,
         "amount": amount
-    }
-
-    return render(request, "payments/payment.html", context)
+    })
 
 
-# VERIFY PAYMENT
+# ✅ PAYMENT SUCCESS (GET BASED)
 @login_required
 def payment_success(request):
-    if request.method == "POST":
-        data = request.POST
+    payment_id = request.GET.get("payment_id")
 
-        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    # 🔥 Get latest payment record
+    payment = Payment.objects.filter(user=request.user).last()
 
-        try:
-            client.utility.verify_payment_signature({
-                'razorpay_order_id': data['razorpay_order_id'],
-                'razorpay_payment_id': data['razorpay_payment_id'],
-                'razorpay_signature': data['razorpay_signature']
-            })
+    if payment:
+        payment.razorpay_payment_id = payment_id
+        payment.status = "success"
+        payment.is_paid = True
+        payment.save()
 
-            payment = Payment.objects.get(razorpay_order_id=data['razorpay_order_id'])
+        # 🔥 Mark user as paid
+        profile = ensure_user_profile(request.user)
+        profile.is_paid_user = True
+        profile.save()
 
-            payment.razorpay_payment_id = data['razorpay_payment_id']
-            payment.razorpay_signature = data['razorpay_signature']
-            payment.status = "success"
-            payment.save()
-
-            # Mark user paid
-            profile = ensure_user_profile(request.user)
-            profile.is_paid_user = True
-            profile.save()
-
-            return render(request, "payments/payment_success.html")
-
-        except:
-            return redirect("payment_failed")
-
-    return redirect("payment_page")
+    return render(request, "payments/payment_success.html", {
+        "payment_id": payment_id
+    })
 
 
+# ✅ PAYMENT FAILED
 @login_required
 def payment_failed(request):
     return render(request, "payments/payment_failed.html")
